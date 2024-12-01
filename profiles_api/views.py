@@ -1,11 +1,13 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import HelloSerializer  # استيراد الـ Serializer
+
+from .serializers import HelloSerializer 
+
+from rest_framework import viewsets
 from rest_framework import status
 
 
 class HelloApiView(APIView):
-    
     """Test Api view"""
 
     serializer_class = HelloSerializer
@@ -19,12 +21,7 @@ class HelloApiView(APIView):
             'Give you the most control oer your application logic',
             'is mapped manually to URLS'
         ]
-
         return Response({'Message':'Hello', 'an_apiview':an_apiview})
-
-
-
-
 
     def post(self, request):
         """Cerate a hello message with your name"""
@@ -37,26 +34,66 @@ class HelloApiView(APIView):
             return Response(serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
             
-            
-            
     def put(self, request, pk=None):
         """Handel Updating an Object"""
         return Response({'method':'PUT'})
-    
 
     def patch(self, request, pk=None):
         """Handel Updapratial update tiofng an Object"""
         return Response({'method':'PATCH'})
-
-    
     
     def delete(self, request, pk=None):
         """Delete an Object"""
         return Response({'method':'DELETE'})
 
+
+
+
+
+    
+class HelloViewSet(viewsets.ViewSet):
+    """Test Api ViewSet"""
+    serializer_class = HelloSerializer
+
+    def list(self, request):
+        """REturn Hello Message"""
+        
+        a_viewset = [
+            'Uses actions (list , create, retrive update , partial_update)',
+            'Automaticly maps to Urls Usinfg Routers',
+            'provides more functionality with less code'
+        ]
+        return Response({'message':'Hello', 'a_viewset':a_viewset})
+    
+    def create(self, request):
+        """Create an new Hello Message"""
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            name = serializer.validated_data.get('name')
+            message = f'Hello {name}!'
+            return Response({'message':message})
+        else:
+            return Response(
+                serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    def retrieve(self, request, pk=None):
+        """Hande gettinf an object by its id """
+        return Response({'http_method':'GET'})
+    
+    def update(self, request, pk=None):
+        """Handel Updating An Object"""
+        return Response({'http_method':'PUT'})
     
     
+    def partial_update(self, request, pk=None):
+        """Handling Updating part of project"""
+        return Response({'http_method':'PATCH'})
     
+    
+    def destroy(self, request, pk=None):
+        """Handel Removing an Object"""
+        return Response({'http_method':'DELETE'})
     
     
     
