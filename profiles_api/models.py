@@ -44,7 +44,7 @@ class UserProfile(AbstractBaseUser,PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     
     
-    bjects = UserProfileManager()
+    objects = UserProfileManager()
     
     
 
